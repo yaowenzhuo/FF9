@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>水晶的记忆 —— 《最终幻想IX》数字专题杂志</title>
+<meta name="description" content="一部关于《最终幻想IX》的深度数字专题杂志">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+--midnight:#0a0e1a;--gold:#c8a84e;--gold-light:#e2c97e;--gold-dark:#9a7b2e;--gold-glow:rgba(200,168,78,.15);
+--parchment:#f4eed7;--deep-green:#1a2e1a;--crimson:#6b1a2a;--wine:#4a1a2a;
+--blue-gray:#2a3a4a;--charcoal:#1a1a1a;
+--text-primary:#f0ece0;--text-secondary:#b8b0a0;--text-muted:#807868;
+--font-serif:Georgia,'Noto Serif SC','Source Han Serif SC',SimSun,serif;
+--font-sans:'Helvetica Neue','PingFang SC','Microsoft YaHei',sans-serif;
+}
+html{scroll-behavior:smooth;font-size:16px;-webkit-font-smoothing:antialiased}
+body{background:var(--midnight);color:var(--text-primary);font-family:var(--font-sans);line-height:1.8;overflow-x:hidden;transition:background .6s ease,color .6s ease}
+body.light{--midnight:#f5f0e8;--gold:#8b6914;--gold-light:#a07d2a;--gold-dark:#6b5010;--gold-glow:rgba(139,105,20,.1);--text-primary:#1a1510;--text-secondary:#5a5040;--text-muted:#8a8070;--charcoal:#e8e0d0}
+img{max-width:100%;height:auto;display:block}
+a{color:var(--gold);text-decoration:none;transition:color .3s}
+a:hover{color:var(--gold-light)}
+::selection{background:var(--gold);color:var(--midnight)}
+
+/* === PROGRESS === */
+#progress-bar{position:fixed;top:0;left:0;width:0;height:3px;background:linear-gradient(90deg,var(--gold-dark),var(--gold),var(--gold-light));z-index:10000;transition:width .1s}
+
+/* === NAV === */
+.nav-top{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(10,14,26,.92);backdrop-filter:blur(20px);z-index:9000;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;border-bottom:1px solid rgba(200,168,78,.1);transition:transform .4s ease}
+.nav-top.hidden{transform:translateY(-100%)}
+.nav-logo{font-family:var(--font-serif);font-size:1.1rem;color:var(--gold);letter-spacing:.1em;font-weight:700}
+.nav-logo span{color:var(--text-primary);font-weight:400;font-size:.85rem;margin-left:.5rem}
+.nav-links{display:flex;gap:0;list-style:none;height:100%}
+.nav-links li{position:relative}
+.nav-links a{display:flex;align-items:center;height:60px;padding:0 1rem;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);transition:color .3s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-links a.active::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:20px;height:2px;background:var(--gold)}
+.nav-controls{display:flex;align-items:center;gap:1rem}
+.nav-toggle{display:none;background:none;border:none;color:var(--gold);font-size:1.5rem;cursor:pointer}
+.theme-toggle{background:none;border:1px solid rgba(200,168,78,.3);color:var(--gold);width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:all .3s}
+.theme-toggle:hover{background:rgba(200,168,78,.15);border-color:var(--gold)}
+
+/* === MOBILE === */
+.mobile-menu{display:none;position:fixed;top:60px;left:0;right:0;bottom:0;background:rgba(10,14,26,.97);backdrop-filter:blur(20px);z-index:8999;padding:2rem;overflow-y:auto}
+.mobile-menu.open{display:block}
+.mobile-menu a{display:block;padding:.8rem 0;font-size:1rem;color:var(--text-secondary);border-bottom:1px solid rgba(200,168,78,.1)}
+.mobile-menu a:hover,.mobile-menu a.active{color:var(--gold)}
+
+/* === SIDEBAR === */
+.sidebar-toc{position:fixed;right:1rem;top:50%;transform:translateY(-50%);z-index:100;list-style:none;display:flex;flex-direction:column;gap:.6rem;opacity:0;transition:opacity .4s}
+.sidebar-toc.visible{opacity:1}
+.sidebar-toc a{display:block;width:10px;height:10px;border-radius:50%;background:rgba(200,168,78,.25);transition:all .3s;position:relative}
+.sidebar-toc a:hover{background:var(--gold);transform:scale(1.3)}
+.sidebar-toc a.active{background:var(--gold);box-shadow:0 0 12px rgba(200,168,78,.5)}
+.sidebar-toc a .toc-label{position:absolute;right:24px;top:50%;transform:translateY(-50%);white-space:nowrap;font-size:.7rem;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;opacity:0;pointer-events:none;transition:opacity .3s;background:rgba(10,14,26,.9);padding:2px 8px;border-radius:3px}
+.sidebar-toc a:hover .toc-label{opacity:1}
+
+/* === BACK TO TOP === */
+.back-to-top{position:fixed;bottom:2rem;right:2rem;width:48px;height:48px;background:rgba(200,168,78,.15);border:1px solid var(--gold-dark);border-radius:50%;color:var(--gold);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:all .4s;z-index:100}
+.back-to-top.visible{opacity:1;pointer-events:auto}
+.back-to-top:hover{background:var(--gold);color:var(--midnight)}
+
+/* === HERO === */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;background:var(--midnight);overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,14,26,.4) 0%,rgba(10,14,26,.7) 50%,var(--midnight) 100%)}
+.hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.5;filter:saturate(.7)}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:900px;padding:2rem}
+.hero-subtitle{font-size:clamp(.7rem,1.2vw,.9rem);letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem}
+.hero-title{font-family:var(--font-serif);font-size:clamp(3rem,8vw,7rem);color:var(--text-primary);line-height:1.05;letter-spacing:-.02em;margin-bottom:1rem}
+.hero-title em{font-style:normal;color:var(--gold)}
+.hero-tagline{font-family:var(--font-serif);font-size:clamp(1rem,2vw,1.5rem);color:var(--text-secondary);font-style:italic;margin-bottom:3rem;line-height:1.6}
+.hero-cta{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 2rem;border:1px solid var(--gold);color:var(--gold);font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;transition:all .3s}
+.hero-cta:hover{background:var(--gold);color:var(--midnight)}
+.hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);color:var(--gold);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;animation:float 2s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}
+
+/* === SECTION === */
+.magazine-section{padding:clamp(3rem,8vw,8rem) 0;position:relative;overflow:hidden}
+.section-inner{max-width:1200px;margin:0 auto;padding:0 clamp(1.5rem,4vw,4rem)}
+.section-label{display:inline-block;font-size:.7rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-dark);padding:.4em 1.2em;border-radius:2rem;margin-bottom:1.5rem}
+.section-title{font-family:var(--font-display,Georgia,serif);font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;color:var(--text-primary);margin-bottom:.5em}
+.section-lead{font-size:clamp(1rem,1.8vw,1.2rem);color:var(--text-secondary);max-width:700px;line-height:1.9;margin-bottom:2.5rem}
+.display-lg{font-size:clamp(2.2rem,5vw,4.5rem);letter-spacing:-.015em}
+
+/* === PROSE === */
+.content-prose{max-width:900px;margin:0 auto}
+.content-prose p{margin-bottom:1.5rem;font-size:clamp(1rem,1.15vw,1.15rem);line-height:2;color:var(--text-secondary)}
+.content-prose p:first-of-type::first-letter{font-size:3.2em;float:left;line-height:1;margin-right:.1em;margin-top:.05em;color:var(--gold);font-family:var(--font-serif);font-weight:700}
+.content-prose h2{font-size:clamp(1.8rem,3vw,2.5rem);margin:3.5rem 0 1.5rem;color:var(--gold);letter-spacing:.02em}
+.content-prose h3{font-size:clamp(1.3rem,2vw,1.6rem);margin:2.5rem 0 1rem;color:var(--text-primary)}
+.content-prose h4{font-size:1.1rem;margin:2rem 0 .8rem;color:var(--gold-light)}
+.content-prose blockquote{border-left:3px solid var(--gold);padding:1rem 1.5rem;margin:2rem 0;background:rgba(200,168,78,.05);font-style:italic;color:var(--text-secondary)}
+.content-prose blockquote cite{display:block;margin-top:.5rem;font-size:.85rem;color:var(--gold-dark);font-style:normal}
+.content-prose ul,.content-prose ol{margin:1rem 0 1.5rem 1.5rem;color:var(--text-secondary)}
+.content-prose li{margin-bottom:.5rem;line-height:1.8}
+.content-prose strong{color:var(--text-primary);font-weight:600}
+
+/* === LAYOUT === */
+.layout-split{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;min-height:60vh}
+.layout-split.reverse{direction:rtl}
+.layout-split.reverse>*{direction:ltr}
+.layout-center{text-align:center;padding:clamp(4rem,10vw,10rem) clamp(1.5rem,4vw,4rem)}
+.split-text{padding:clamp(2rem,5vw,5rem)}
+.split-media{position:relative;min-height:500px;overflow:hidden}
+.split-media img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+
+/* === STATS === */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;margin:3rem 0;text-align:center}
+.stat-block{padding:2rem;background:rgba(255,255,255,.02);border:1px solid rgba(200,168,78,.08)}
+.stat-number{font-family:var(--font-serif);font-size:clamp(2rem,4vw,3.5rem);color:var(--gold);line-height:1;margin-bottom:.5rem}
+.stat-label{font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted)}
+
+/* === TIMELINE === */
+.timeline-container{position:relative;padding-left:3rem;margin:3rem 0}
+.timeline-container::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,var(--gold),transparent)}
+.timeline-item{position:relative;margin-bottom:3rem}
+.timeline-item::before{content:'';position:absolute;left:-3rem;top:.4rem;width:12px;height:12px;border-radius:50%;border:2px solid var(--gold);background:var(--midnight);transform:translateX(-5.5px)}
+.timeline-item.highlight::before{background:var(--gold);box-shadow:0 0 12px rgba(200,168,78,.5)}
+.timeline-year{font-family:var(--font-serif);font-size:1.3rem;color:var(--gold);margin-bottom:.3rem}
+.timeline-text{color:var(--text-secondary);line-height:1.8;font-size:.95rem}
+
+/* === CHARACTER CARDS === */
+.char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:2rem;margin:3rem 0}
+.char-card{background:rgba(255,255,255,.02);border:1px solid rgba(200,168,78,.08);overflow:hidden;transition:all .4s}
+.char-card:hover{border-color:rgba(200,168,78,.3);transform:translateY(-3px)}
+.char-card-img{height:280px;overflow:hidden;position:relative;background:linear-gradient(135deg,var(--wine),var(--midnight))}
+.char-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.char-card:hover .char-card-img img{transform:scale(1.05)}
+.char-card-body{padding:1.5rem}
+.char-card-body h3{font-size:1.2rem;color:var(--gold);margin-bottom:.3rem}
+.char-card-body .char-subtitle{font-size:.8rem;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem}
+.char-card-body p{font-size:.9rem;color:var(--text-secondary);line-height:1.7}
+
+/* === QUOTE === */
+.magazine-quote{position:relative;padding:clamp(2rem,5vw,4rem);margin:3rem 0;text-align:center}
+.magazine-quote::before{content:'\201C';font-family:var(--font-serif);font-size:8rem;color:rgba(200,168,78,.15);position:absolute;top:-1rem;left:50%;transform:translateX(-50%);line-height:1}
+.magazine-quote blockquote{font-family:var(--font-serif);font-size:clamp(1.2rem,2vw,1.6rem);color:var(--text-primary);line-height:1.7;position:relative;z-index:1;border:none;background:none;padding:0;margin:0}
+.magazine-quote cite{display:block;margin-top:1rem;font-size:.85rem;color:var(--gold);font-style:normal;letter-spacing:.05em}
+
+/* === GALLERY === */
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:2rem 0}
+.gallery-item{overflow:hidden;cursor:pointer;aspect-ratio:16/9;background:var(--charcoal);position:relative}
+.gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.gallery-item:hover img{transform:scale(1.08)}
+
+/* === LIGHTBOX === */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:10000;display:none;align-items:center;justify-content:center;padding:2rem;cursor:pointer}
+.lightbox.open{display:flex}
+.lightbox img{max-width:90vw;max-height:85vh;object-fit:contain;cursor:default}
+.lightbox-close{position:absolute;top:1.5rem;right:1.5rem;color:white;font-size:1.5rem;background:none;border:none;cursor:pointer;width:44px;height:44px;display:flex;align-items:center;justify-content:center}
+.lightbox-caption{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);color:var(--text-secondary);font-size:.9rem;text-align:center;max-width:600px}
+
+/* === DATA TABLE === */
+.data-table-wrap{overflow-x:auto;margin:2rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.9rem}
+.data-table th{background:rgba(200,168,78,.1);color:var(--gold);font-weight:600;text-align:left;padding:.8rem 1rem;letter-spacing:.05em;font-size:.8rem;text-transform:uppercase;border-bottom:1px solid rgba(200,168,78,.2)}
+.data-table td{padding:.7rem 1rem;border-bottom:1px solid rgba(255,255,255,.04);color:var(--text-secondary);vertical-align:top}
+.data-table tr:hover td{background:rgba(200,168,78,.03)}
+
+/* === FEATURE CARDS === */
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;margin:3rem 0}
+.feature-card{background:rgba(255,255,255,.03);border:1px solid rgba(200,168,78,.08);padding:2rem;transition:all .4s}
+.feature-card:hover{border-color:rgba(200,168,78,.25);transform:translateY(-2px)}
+.feature-card h3{color:var(--gold);font-size:1.05rem;margin-bottom:.8rem}
+.feature-card p{font-size:.9rem;color:var(--text-secondary);line-height:1.7}
+
+/* === INFO BOX === */
+.info-box{background:rgba(200,168,78,.06);border:1px solid rgba(200,168,78,.15);padding:1.5rem 2rem;margin:2rem 0;position:relative}
+.info-box::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+.info-box h4{color:var(--gold);margin-bottom:.5rem;font-size:1rem}
+.info-box p{font-size:.9rem;color:var(--text-secondary);line-height:1.7;margin-bottom:0}
+
+/* === SECTION BGS === */
+.bg-overview{background:linear-gradient(180deg,var(--midnight) 0%,#0d1220 100%)}
+.bg-dev{background:linear-gradient(180deg,#0f1422 0%,#151008 100%)}
+.bg-dev .content-prose p{color:#c8b890}
+.bg-dev .content-prose h2,.bg-dev .content-prose h3{color:var(--parchment)}
+.bg-world{background:linear-gradient(180deg,var(--deep-green),#0f1f0f)}
+.bg-world .content-prose p{color:rgba(240,236,224,.8)}
+.bg-char{background:linear-gradient(180deg,var(--wine),#1a0a12)}
+.bg-char .content-prose p{color:rgba(240,236,224,.75)}
+.bg-story{background:linear-gradient(180deg,var(--crimson),#1a0810)}
+.bg-story .content-prose p{color:rgba(240,236,224,.78)}
+.bg-system{background:linear-gradient(180deg,var(--blue-gray),#1a2430)}
+.bg-system .content-prose p{color:rgba(240,236,224,.8)}
+.bg-review{background:var(--charcoal)}
+.bg-gallery{background:var(--charcoal)}
+
+/* === FOOTER === */
+.footer{padding:4rem 0 2rem;border-top:1px solid rgba(200,168,78,.1);text-align:center}
+.footer p{font-size:.8rem;color:var(--text-muted);line-height:1.8}
+.footer .footer-logo{font-family:var(--font-serif);font-size:1.2rem;color:var(--gold);margin-bottom:1rem;letter-spacing:.1em}
+
+/* === REVEAL === */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s ease,transform .8s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* === DIVIDER === */
+.section-divider{display:flex;align-items:center;justify-content:center;padding:2rem 0;gap:1rem}
+.section-divider::before,.section-divider::after{content:'';flex:1;max-width:120px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dark))}
+.section-divider .divider-icon{color:var(--gold);font-size:.8rem}
+
+/* === RESPONSIVE === */
+@media(max-width:1024px){
+  .layout-split{grid-template-columns:1fr;gap:2rem;min-height:auto}
+  .layout-split.reverse{direction:ltr}
+  .split-media{min-height:300px}
+  .sidebar-toc{display:none}
+  .char-grid{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .gallery-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .nav-toggle{display:block}
+  .gallery-grid{grid-template-columns:1fr}
+  .feature-grid{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){
+  .hero-title{font-size:clamp(2.2rem,10vw,3.5rem)}
+  .stats-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div id="progress-bar"></div>
+
+<!-- NAV -->
+<nav class="nav-top" id="mainNav">
+  <div class="nav-logo">水晶的记忆 <span>FFIX</span></div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#hero" class="active">首页</a></li>
+    <li><a href="#overview">概览</a></li>
+    <li><a href="#development">开发</a></li>
+    <li><a href="#world">世界观</a></li>
+    <li><a href="#characters">人物</a></li>
+    <li><a href="#story">剧情</a></li>
+    <li><a href="#systems">系统</a></li>
+    <li><a href="#review">评价</a></li>
+    <li><a href="#gallery">图库</a></li>
+  </ul>
+  <div class="nav-controls">
+    <button class="theme-toggle" id="themeToggle">◐</button>
+    <button class="nav-toggle" id="navToggle">☰</button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#hero">首页</a><a href="#overview">概览</a><a href="#development">开发</a>
+  <a href="#world">世界观</a><a href="#characters">人物</a><a href="#story">剧情</a>
+  <a href="#systems">系统</a><a href="#review">评价</a><a href="#gallery">图库</a>
+</div>
+
+<ul class="sidebar-toc" id="sidebarToc">
+  <li><a href="#hero" class="active"><span class="toc-label">首页</span></a></li>
+  <li><a href="#overview"><span class="toc-label">概览</span></a></li>
+  <li><a href="#development"><span class="toc-label">开发</span></a></li>
+  <li><a href="#world"><span class="toc-label">世界观</span></a></li>
+  <li><a href="#characters"><span class="toc-label">人物</span></a></li>
+  <li><a href="#story"><span class="toc-label">剧情</span></a></li>
+  <li><a href="#systems"><span class="toc-label">系统</span></a></li>
+  <li><a href="#review"><span class="toc-label">评价</span></a></li>
+  <li><a href="#gallery"><span class="toc-label">图库</span></a></li>
+</ul>
+
+<button class="back-to-top" id="backToTop">↑</button>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">✕</button>
+  <img src="" alt="" id="lightboxImg">
+  <div class="lightbox-caption" id="lightboxCaption"></div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg"><img src="https://cdn.akamai.steamstatic.com/steam/apps/377840/library_hero.jpg" alt="FFIX Hero"></div>
+  <div class="hero-content">
+    <p class="hero-subtitle">Square · 2000 · PlayStation</p>
+    <h1 class="hero-title">水晶的<em>记忆</em></h1>
+    <p class="hero-tagline">献给《最终幻想IX》——那个关于生命、记忆与归属的故事，<br>在水晶的光芒中永恒闪烁。</p>
+    <a href="#overview" class="hero-cta">开始阅读 ↓</a>
+  </div>
+  <div class="hero-scroll">向下滚动</div>
+</section>

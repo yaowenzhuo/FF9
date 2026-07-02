@@ -1,0 +1,130 @@
+
+<!-- JavaScript -->
+<script>
+(function(){
+'use strict';
+
+/* 1. Progress Bar */
+var progressBar=document.getElementById('progress-bar');
+function updateProgress(){
+  var h=document.documentElement.scrollHeight-window.innerHeight;
+  var pct=h>0?(window.scrollY/h)*100:0;
+  progressBar.style.width=pct+'%';
+}
+
+/* 2. Nav Hide/Show */
+var nav=document.getElementById('mainNav');
+var lastScroll=0;
+function updateNav(){
+  var st=window.scrollY;
+  if(st>lastScroll&&st>200){nav.classList.add('hidden')}
+  else{nav.classList.remove('hidden')}
+  lastScroll=st;
+}
+
+/* 3. Active Section Highlight */
+var sections=document.querySelectorAll('.magazine-section[id], .hero[id]');
+var navLinks=document.querySelectorAll('.nav-links a, .mobile-menu a');
+function updateActiveSection(){
+  var scrollPos=window.scrollY+window.innerHeight/3;
+  var current='';
+  sections.forEach(function(s){ if(s.offsetTop<=scrollPos) current=s.id; });
+  navLinks.forEach(function(a){
+    a.classList.remove('active');
+    if(a.getAttribute('href')==='#'+current) a.classList.add('active');
+  });
+}
+
+/* 4. Sidebar TOC */
+var tocLinks=document.querySelectorAll('.sidebar-toc a');
+var sidebarToc=document.getElementById('sidebarToc');
+function updateToc(){
+  var scrollPos=window.scrollY+window.innerHeight/3;
+  var current='';
+  sections.forEach(function(s){ if(s.offsetTop<=scrollPos) current=s.id; });
+  tocLinks.forEach(function(a){
+    a.classList.remove('active');
+    if(a.getAttribute('href')==='#'+current) a.classList.add('active');
+  });
+  sidebarToc.classList.toggle('visible', window.scrollY>window.innerHeight*0.5);
+}
+
+/* 5. Back to Top */
+var backBtn=document.getElementById('backToTop');
+function updateBackBtn(){
+  backBtn.classList.toggle('visible', window.scrollY>window.innerHeight);
+}
+backBtn.addEventListener('click', function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+
+/* 6. Theme */
+var themeBtn=document.getElementById('themeToggle');
+themeBtn.addEventListener('click', function(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('ffix-theme', document.body.classList.contains('light')?'light':'dark');
+});
+if(localStorage.getItem('ffix-theme')==='light') document.body.classList.add('light');
+
+/* 7. Mobile Nav */
+var navToggle=document.getElementById('navToggle');
+var mobileMenu=document.getElementById('mobileMenu');
+navToggle.addEventListener('click', function(){
+  mobileMenu.classList.toggle('open');
+  navToggle.textContent=mobileMenu.classList.contains('open')?'✕':'☰';
+});
+mobileMenu.querySelectorAll('a').forEach(function(a){
+  a.addEventListener('click', function(){
+    mobileMenu.classList.remove('open');
+    navToggle.textContent='☰';
+  });
+});
+
+/* 8. Lightbox */
+var lightbox=document.getElementById('lightbox');
+var lightboxImg=document.getElementById('lightboxImg');
+var lightboxCap=document.getElementById('lightboxCaption');
+var lightboxClose=document.getElementById('lightboxClose');
+document.querySelectorAll('[data-lightbox]').forEach(function(el){
+  el.addEventListener('click', function(e){
+    e.stopPropagation();
+    var img=el.tagName==='IMG'?el:el.querySelector('img');
+    if(!img) return;
+    lightboxImg.src=img.src;
+    lightboxImg.alt=img.alt;
+    lightboxCap.textContent=el.getAttribute('data-caption')||img.alt||'';
+    lightbox.classList.add('open');
+    document.body.style.overflow='hidden';
+  });
+});
+function closeLightbox(){
+  lightbox.classList.remove('open');
+  document.body.style.overflow='';
+}
+lightboxClose.addEventListener('click', closeLightbox);
+lightbox.addEventListener('click', function(e){ if(e.target===lightbox) closeLightbox(); });
+document.addEventListener('keydown', function(e){ if(e.key==='Escape'&&lightbox.classList.contains('open')) closeLightbox(); });
+
+/* 9. Reveal Animation */
+var observer=new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
+    if(entry.isIntersecting){ entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+  });
+},{threshold:0.1, rootMargin:'0px 0px -50px 0px'});
+document.querySelectorAll('.reveal').forEach(function(el){ observer.observe(el); });
+
+/* 10. Scroll */
+var ticking=false;
+function onScroll(){
+  if(!ticking){
+    requestAnimationFrame(function(){ updateProgress(); updateNav(); updateActiveSection(); updateToc(); updateBackBtn(); ticking=false; });
+    ticking=true;
+  }
+}
+window.addEventListener('scroll', onScroll, {passive:true});
+
+/* Init */
+updateProgress(); updateNav(); updateActiveSection(); updateToc(); updateBackBtn();
+
+})();
+</script>
+</body>
+</html>
